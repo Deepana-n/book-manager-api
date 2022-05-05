@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
@@ -107,6 +109,18 @@ public class BookManagerControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         verify(mockBookManagerServiceImpl, times(1)).updateBookById(book.getId(), book);
+    }
+
+    @Test
+    public void testDeleteMappingDeleteABook() throws Exception {
+        // given - precondition or setup
+        Book book = new Book(4L, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
+        willDoNothing().given(mockBookManagerServiceImpl).deleteBookById(book.getId());
+        // when -  action or the behaviour that we are going test
+        ResultActions response = this.mockMvcController.perform( MockMvcRequestBuilders.delete("/api/v1/book/" + book.getId()));
+        // then - verify the output
+        response.andExpect(MockMvcResultMatchers.status().isNoContent());
+        verify(mockBookManagerServiceImpl, times(1)).deleteBookById(book.getId());
     }
 
 }
