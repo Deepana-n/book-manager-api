@@ -53,6 +53,7 @@ public class BookManagerControllerTests {
         books.add(new Book(2L, "Book Two", "This is the description for Book Two", "Person Two", Genre.Education));
         books.add(new Book(3L, "Book Three", "This is the description for Book Three", "Person Three", Genre.Education));
 
+       //stub return of the method (replacing whatever the method returns by forcing it) mock doesnt do anything so have to force the return
         when(mockBookManagerServiceImpl.getAllBooks()).thenReturn(books);
 
         this.mockMvcController.perform(
